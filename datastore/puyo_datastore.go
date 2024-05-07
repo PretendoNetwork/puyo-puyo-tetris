@@ -15,6 +15,7 @@ var selectByDataIdStmt *sql.Stmt
 var selectByNameAndOwnerStmt *sql.Stmt
 var insertObjectStmt *sql.Stmt
 var updateMetaBinaryStmt *sql.Stmt
+var updatePeriodStmt *sql.Stmt
 
 // === GETTERS ===
 
@@ -159,14 +160,8 @@ func InitializeObjectRatingWithSlot(_ uint64, _ *types.DataStoreRatingInitParamW
 
 // === UPDATERS ===
 
-// Parts of ChangeMeta
-func UpdateObjectPeriodByDataIDWithPassword(_ *nextypes.PrimitiveU64, _ *nextypes.PrimitiveU16, _ *nextypes.PrimitiveU64) *nex.Error {
-	return nex.NewError(nex.ResultCodes.Core.NotImplemented, "UpdateObjectPeriodByDataIDWithPassword unimplemented")
-}
-
-// Parts of ChangeMeta
-func UpdateObjectMetaBinaryByDataIDWithPassword(dataID *nextypes.PrimitiveU64, metaBinary *nextypes.QBuffer, _ *nextypes.PrimitiveU64) *nex.Error {
-	result, err := updateMetaBinaryStmt.Exec(metaBinary.Value, dataID.Value)
+func updateObjects(stmt *sql.Stmt, args ...any) *nex.Error {
+	result, err := stmt.Exec(args...)
 	if err != nil {
 		return nex.NewError(nex.ResultCodes.DataStore.SystemFileError, err.Error())
 	}
@@ -179,6 +174,16 @@ func UpdateObjectMetaBinaryByDataIDWithPassword(dataID *nextypes.PrimitiveU64, m
 	}
 
 	return nil
+}
+
+// Parts of ChangeMeta
+func UpdateObjectPeriodByDataIDWithPassword(dataID *nextypes.PrimitiveU64, period *nextypes.PrimitiveU16, _ *nextypes.PrimitiveU64) *nex.Error {
+	return updateObjects(updatePeriodStmt, period.Value, dataID.Value)
+}
+
+// Parts of ChangeMeta
+func UpdateObjectMetaBinaryByDataIDWithPassword(dataID *nextypes.PrimitiveU64, metaBinary *nextypes.QBuffer, _ *nextypes.PrimitiveU64) *nex.Error {
+	return updateObjects(updateMetaBinaryStmt, metaBinary.Value, dataID.Value)
 }
 
 // Parts of ChangeMeta
@@ -255,6 +260,12 @@ func initDatastore() {
 		panic(err)
 	}
 	updateMetaBinaryStmt = stmt
+
+	stmt, err = Postgres.Prepare(`UPDATE datastore.objects SET period = $1 WHERE data_id = $2`)
+	if err != nil {
+		panic(err)
+	}
+	updatePeriodStmt = stmt
 }
 
 // Helpers for nex types
