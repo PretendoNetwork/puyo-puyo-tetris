@@ -104,7 +104,7 @@ func GetObjectInfoByPersistenceTargetWithPassword(_ *types.DataStorePersistenceT
 
 // get own gamedata (among other things)
 func GetObjectInfosByDataStoreSearchParam(param *types.DataStoreSearchParam, pid *nextypes.PID) ([]*types.DataStoreMetaInfo, uint32, *nex.Error) {
-	// TODO refactor this according to Jon's notes
+	// TODO refactor this according to Jon's notes, add enum values
 	if param.DataType.Value == 65535 && param.SearchTarget.Value == 10 {
 		// TODO "gamedata" hardcoded
 		objects, err := getObjects(selectByNameAndOwnerStmt, 1, "gamedata", pid.Value())
@@ -197,22 +197,22 @@ func UpdateObjectDataTypeByDataIDWithPassword(_ *nextypes.PrimitiveU64, _ *nexty
 func initDatastore() {
 	const selectObject = `
 	SELECT
-    	data_id,
-    	owner,
-    	size,
-    	name,
-    	data_type,
+		data_id,
+		owner,
+		size,
+		name,
+		data_type,
 		meta_binary,
-        permission,
-     	permission_recipients,
-     	delete_permission,
-     	delete_permission_recipients,
-     	flag,
-        period,
-     	refer_data_id,
-     	tags,
-     	creation_date,
-     	update_date
+		permission,
+		permission_recipients,
+		delete_permission,
+		delete_permission_recipients,
+		flag,
+		period,
+		refer_data_id,
+		tags,
+		creation_date,
+		update_date
 	FROM datastore.objects`
 
 	stmt, err := Postgres.Prepare(selectObject + ` WHERE name = $2 AND owner = $3 LIMIT $1`)
@@ -228,27 +228,27 @@ func initDatastore() {
 	selectByDataIdStmt = stmt
 
 	stmt, err = Postgres.Prepare(`INSERT INTO datastore.objects 
-    (
-    	owner,
-     	size,
-     	name,
-     	data_type,
-     	meta_binary,
-        permission,
-     	permission_recipients,
-     	delete_permission,
-     	delete_permission_recipients,
-     	flag,
-        period,
-     	refer_data_id,
-     	tags, 
-     	persistence_slot_id,
-     	extra_data,
-     	creation_date,
-     	update_date
-    )
+	(
+		owner,
+		size,
+		name,
+		data_type,
+		meta_binary,
+		permission,
+		permission_recipients,
+		delete_permission,
+		delete_permission_recipients,
+		flag,
+		period,
+		refer_data_id,
+		tags, 
+		persistence_slot_id,
+		extra_data,
+		creation_date,
+		update_date
+	)
 	VALUES (
-	        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
 	) RETURNING data_id`)
 	if err != nil {
 		panic(err)
@@ -268,7 +268,7 @@ func initDatastore() {
 	updatePeriodStmt = stmt
 }
 
-// Helpers for nex types
+// Helpers for nex types - these can go once the types refactor lands
 func convertPIDList(list *nextypes.List[*nextypes.PID]) []uint64 {
 	result := make([]uint64, list.Length())
 

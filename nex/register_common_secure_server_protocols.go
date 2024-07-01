@@ -8,10 +8,10 @@ import (
 	commonsecure "github.com/PretendoNetwork/nex-protocols-common-go/v2/secure-connection"
 	datastore "github.com/PretendoNetwork/nex-protocols-go/v2/datastore"
 	ranking "github.com/PretendoNetwork/nex-protocols-go/v2/ranking"
+	rankingtypes "github.com/PretendoNetwork/nex-protocols-go/v2/ranking/types"
 	secure "github.com/PretendoNetwork/nex-protocols-go/v2/secure-connection"
 	puyodatastore "github.com/PretendoNetwork/puyo-puyo-tetris/datastore"
 	"github.com/PretendoNetwork/puyo-puyo-tetris/globals"
-	puyoranking "github.com/PretendoNetwork/puyo-puyo-tetris/ranking"
 	"os"
 
 	commonmatchmaking "github.com/PretendoNetwork/nex-protocols-common-go/v2/match-making"
@@ -23,8 +23,6 @@ import (
 
 	commonnattraversal "github.com/PretendoNetwork/nex-protocols-common-go/v2/nat-traversal"
 	nattraversal "github.com/PretendoNetwork/nex-protocols-go/v2/nat-traversal"
-
-	matchmakingtypes "github.com/PretendoNetwork/nex-protocols-go/v2/match-making/types"
 
 	commonglobals "github.com/PretendoNetwork/nex-protocols-common-go/v2/globals"
 )
@@ -57,25 +55,31 @@ func MatchmakeExtensionCloseParticipation(err error, packet nex.PacketInterface,
 	return rmcResponse, nil
 }
 
-func CreateReportDBRecord(_ *types.PID, _ *types.PrimitiveU32, _ *types.QBuffer) error {
+func stubCreateReportDBRecord(_ *types.PID, _ *types.PrimitiveU32, _ *types.QBuffer) error {
 	return nil
 }
 
-// TO DO:
-// How do clubs work?
-// GetObjectInfoByDataID
-// UpdateObjectPeriodByDataIDWithPassword
-// UpdateObjectMetaBinaryByDataIDWithPassword
-// UpdateObjectDataTypeByDataIDWithPassword
+func stubGetRankingsAndCountByCategoryAndRankingOrderParam(_ *types.PrimitiveU32, _ *rankingtypes.RankingOrderParam) (*types.List[*rankingtypes.RankingRankData], uint32, error) {
+	return nil, 0, nil
+}
+
+func stubInsertRankingByPIDAndRankingScoreData(_ *types.PID, _ *rankingtypes.RankingScoreData, _ *types.PrimitiveU64) error {
+	return nil
+}
+
+func stubUploadCommonData(_ *types.PID, _ *types.PrimitiveU64, _ *types.Buffer) error {
+	return nil
+}
 
 func registerCommonSecureServerProtocols() {
 	secureProtocol := secure.NewProtocol()
 	globals.SecureEndpoint.RegisterServiceProtocol(secureProtocol)
 	commonSecureProtocol := commonsecure.NewCommonProtocol(secureProtocol)
 
-	commonSecureProtocol.CreateReportDBRecord = CreateReportDBRecord
+	commonSecureProtocol.CreateReportDBRecord = stubCreateReportDBRecord
 
-	// Datastore - replays, user profiles (country, preferred character)
+	// Datastore - user profiles (country, preferred character)
+	// TODO Replay upload and search
 	datastoreProtocol := datastore.NewProtocol()
 	globals.SecureEndpoint.RegisterServiceProtocol(datastoreProtocol)
 	commonDatastoreProtocol := commondatastore.NewCommonProtocol(datastoreProtocol)
@@ -92,13 +96,15 @@ func registerCommonSecureServerProtocols() {
 	commonDatastoreProtocol.GetObjectInfoByDataIDWithPassword = puyodatastore.GetObjectInfoByDataIDWithPassword
 	commonDatastoreProtocol.GetObjectInfoByPersistenceTargetWithPassword = puyodatastore.GetObjectInfoByPersistenceTargetWithPassword
 
-	// Ranking - ??
+	// TODO Ranking - Stub implementation for now
 	rankingProtocol := ranking.NewProtocol()
 	globals.SecureEndpoint.RegisterServiceProtocol(rankingProtocol)
 	commonRankingProtocol := commonranking.NewCommonProtocol(rankingProtocol)
-	commonRankingProtocol.GetRankingsAndCountByCategoryAndRankingOrderParam = puyoranking.GetRankingsAndCountByCategoryAndRankingOrderParam
+	commonRankingProtocol.GetRankingsAndCountByCategoryAndRankingOrderParam = stubGetRankingsAndCountByCategoryAndRankingOrderParam
+	commonRankingProtocol.InsertRankingByPIDAndRankingScoreData = stubInsertRankingByPIDAndRankingScoreData
+	commonRankingProtocol.UploadCommonData = stubUploadCommonData
 
-	// Matchmaking stuff - National Puzzle League
+	// Matchmaking - National Puzzle League
 	natTraversalProtocol := nattraversal.NewProtocol()
 	globals.SecureEndpoint.RegisterServiceProtocol(natTraversalProtocol)
 	commonnattraversal.NewCommonProtocol(natTraversalProtocol)
@@ -113,20 +119,7 @@ func registerCommonSecureServerProtocols() {
 
 	matchmakeExtensionProtocol := matchmakeextension.NewProtocol()
 	globals.SecureEndpoint.RegisterServiceProtocol(matchmakeExtensionProtocol)
-	commonMatchmakeExtensionProtocol := commonmatchmakeextension.NewCommonProtocol(matchmakeExtensionProtocol)
+	commonmatchmakeextension.NewCommonProtocol(matchmakeExtensionProtocol)
 	// * Handle custom CloseParticipation behaviour
 	matchmakeExtensionProtocol.SetHandlerCloseParticipation(MatchmakeExtensionCloseParticipation)
-
-	commonMatchmakeExtensionProtocol.OnAfterAutoMatchmakeWithSearchCriteriaPostpone = func(packet nex.PacketInterface, lstSearchCriteria *types.List[*matchmakingtypes.MatchmakeSessionSearchCriteria], anyGathering *types.AnyDataHolder, strMessage *types.String) {
-		globals.Logger.Info("Matchmake search criteria:")
-		for _, criteria := range lstSearchCriteria.Slice() {
-			globals.Logger.Info(criteria.FormatToString(1))
-		}
-
-		globals.Logger.Info("Active matchmaking sessions:")
-		for _, session := range commonglobals.Sessions {
-			globals.Logger.Info(session.GameMatchmakeSession.FormatToString(1))
-		}
-	}
-
 }

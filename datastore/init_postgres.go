@@ -55,26 +55,5 @@ func initPostgres() {
 		os.Exit(0)
 	}
 
-	//// * Unsure what like half of this is but the client sends it so we saves it
-	//_, err = Postgres.Exec(`CREATE TABLE IF NOT EXISTS datastore.object_ratings (
-	//	data_id bigint,
-	//	slot smallint,
-	//	flag smallint,
-	//	internal_flag smallint,
-	//	lock_type smallint,
-	//	initial_value bigint,
-	//	range_min int,
-	//	range_max int,
-	//	period_hour smallint,
-	//	period_duration int,
-	//	total_value bigint,
-	//	count int NOT NULL DEFAULT 0,
-	//	PRIMARY KEY(data_id, slot)
-	//)`)
-	//if err != nil {
-	//	globals.Logger.Critical(err.Error())
-	//	os.Exit(0)
-	//}
-
 	globals.Logger.Success("Postgres tables created")
 }

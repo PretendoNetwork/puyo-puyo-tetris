@@ -51,3 +51,8 @@ All configuration options are handled via environment variables
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_HOST`          | Host name for your account server gRPC service                                                  | Yes                                           |
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_PORT`          | Port for your account server gRPC service                                                       | Yes                                           |
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_API_KEY`       | API key for your account server gRPC service                                                    | No (Assumed to be an open gRPC API)           |
+| `PN_PUYOPUYOTETRIS_POSTGRES_URI`               | Postgres connection for DataStore DB                                                            | Yes                                           |
+| `PN_PUYOPUYOTETRIS_CONFIG_S3_ENDPOINT`         | URL for DataStore S3 storage                                                                    | Yes                                           |
+| `PN_PUYOPUYOTETRIS_CONFIG_S3_ACCESS_KEY`       | Access key for S3                                                                               | Yes                                           |
+| `PN_PUYOPUYOTETRIS_CONFIG_S3_SECRET`           | Secret key for S3                                                                               | Yes                                           |
+| `PN_PUYOPUYOTETRIS_CONFIG_S3_BUCKET`           | Bucket for DataStore storage                                                                    | Yes                                           |
