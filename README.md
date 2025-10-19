@@ -58,7 +58,7 @@ All configuration options are handled via environment variables
 | `PN_PUYOPUYOTETRIS_FRIENDS_GRPC_API_KEY`       | API key for Friends gRPC service                                                                | No (Assumed to be an open gRPC API)           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_ENDPOINT`         | URL for DataStore S3 storage                                                                    | Yes                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_ACCESS_KEY`       | Access key for S3                                                                               | Yes                                           |
-| `PN_PUYOPUYOTETRIS_CONFIG_S3_SECRET`           | Secret key for S3                                                                               | Yes                                           |
+| `PN_PUYOPUYOTETRIS_CONFIG_S3_ACCESS_SECRET`    | Secret key for S3                                                                               | Yes                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_BUCKET`           | Bucket for DataStore storage                                                                    | Yes                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_KEY_BASE`         | Base for Datastore keys                                                                         | YES                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_INSECURE`         | Use HTTP for S3 endpoints                                                                       | No (Default off)                              |
