@@ -2,9 +2,10 @@ package nex
 
 import (
 	"fmt"
-	common_globals "github.com/PretendoNetwork/nex-protocols-common-go/v2/globals"
 	"os"
 	"strconv"
+
+	common_globals "github.com/PretendoNetwork/nex-protocols-common-go/v2/globals"
 
 	"github.com/PretendoNetwork/nex-go/v2"
 	"github.com/PretendoNetwork/puyo-puyo-tetris/globals"
@@ -39,7 +40,7 @@ func StartSecureServer() {
 
 	globals.MatchmakingManager = common_globals.NewMatchmakingManager(globals.SecureEndpoint, globals.Postgres)
 	globals.DatastoreManager = common_globals.NewDataStoreManager(globals.SecureEndpoint, globals.Postgres)
-	globals.DatastoreManager.SetS3Config(globals.S3Bucket, globals.S3KeyBase, globals.S3Presigner)
+	globals.DatastoreManager.SetS3Config(globals.S3Bucket, globals.S3KeyBase, globals.S3Manager)
 
 	registerCommonSecureServerProtocols()
 

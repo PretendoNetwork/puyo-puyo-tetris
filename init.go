@@ -4,10 +4,11 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
-	commonglobals "github.com/PretendoNetwork/nex-protocols-common-go/v2/globals"
 	"os"
 	"strconv"
 	"strings"
+
+	commonglobals "github.com/PretendoNetwork/nex-protocols-common-go/v2/globals"
 
 	pbaccount "github.com/PretendoNetwork/grpc/go/account"
 	pbfriends "github.com/PretendoNetwork/grpc/go/friends"
@@ -168,7 +169,7 @@ func init() {
 	}
 
 	globals.MinIOClient = minIOClient
-	globals.S3Presigner = commonglobals.NewMinIOPresigner(minIOClient)
+	globals.S3Manager = commonglobals.NewMinIOManager(minIOClient)
 	globals.S3Bucket = s3Bucket
 	globals.S3KeyBase = s3KeyBase
 
