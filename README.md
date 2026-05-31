@@ -1,4 +1,4 @@
-# PUYOPUYOTETRIS (Wii U) replacement server
+# PUYOPUYOTETRIS (Wii U+3DS) replacement server
 Includes both the authentication and secure servers
 
 ## Compiling
@@ -7,15 +7,15 @@ Includes both the authentication and secure servers
 Install [Go](https://go.dev/doc/install) and [git](https://git-scm.com/downloads), then clone and enter the repository
 
 ```bash
-$ git clone https://github.com/PretendoNetwork/puyopuyotetris
-$ cd puyopuyotetris
+$ git clone https://github.com/PretendoNetwork/puyo-puyo-tetris
+$ cd puyo-puyo-tetris
 ```
 
 ### Compiling using `go`
 To compile using Go, `go get` the required modules and then `go build` to your desired location. You may also want to tidy the go modules, though this is optional
 
 ```bash
-$ go get -u
+$ go get
 $ go mod tidy
 $ go build -o build/puyopuyotetris
 ```
