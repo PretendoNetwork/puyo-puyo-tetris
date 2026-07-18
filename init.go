@@ -50,7 +50,7 @@ func init() {
 	friendsGRPCPort := os.Getenv("PN_PUYOPUYOTETRIS_FRIENDS_GRPC_PORT")
 	friendsGRPCAPIKey := os.Getenv("PN_PUYOPUYOTETRIS_FRIENDS_GRPC_API_KEY")
 	localAuthMode := os.Getenv("PN_PUYOPUYOTETRIS_LOCAL_AUTH")
-	healthCheckPort := os.Getenv("PN_PP20_HEALTH_CHECK_PORT")
+	healthCheckPort := os.Getenv("PN_PUYOPUYOTETRIS_HEALTH_CHECK_PORT")
 
 	if strings.TrimSpace(kerberosPassword) == "" {
 		globals.Logger.Warningf("PN_PUYOPUYOTETRIS_KERBEROS_PASSWORD environment variable not set. Using default password: %q", globals.KerberosPassword)
