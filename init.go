@@ -11,6 +11,7 @@ import (
 
 	pbaccount "github.com/PretendoNetwork/grpc/go/account"
 	pbfriends "github.com/PretendoNetwork/grpc/go/friends"
+	"github.com/PretendoNetwork/nex-go/v2"
 	"github.com/PretendoNetwork/plogger-go"
 	"github.com/PretendoNetwork/puyo-puyo-tetris/globals"
 	"github.com/joho/godotenv"
@@ -49,6 +50,7 @@ func init() {
 	friendsGRPCPort := os.Getenv("PN_PUYOPUYOTETRIS_FRIENDS_GRPC_PORT")
 	friendsGRPCAPIKey := os.Getenv("PN_PUYOPUYOTETRIS_FRIENDS_GRPC_API_KEY")
 	localAuthMode := os.Getenv("PN_PUYOPUYOTETRIS_LOCAL_AUTH")
+	healthCheckPort := os.Getenv("PN_PP20_HEALTH_CHECK_PORT")
 
 	if strings.TrimSpace(kerberosPassword) == "" {
 		globals.Logger.Warningf("PN_PUYOPUYOTETRIS_KERBEROS_PASSWORD environment variable not set. Using default password: %q", globals.KerberosPassword)
@@ -165,4 +167,16 @@ func init() {
 		globals.Logger.Critical(err.Error())
 	}
 	globals.Logger.Success("Connected to Postgres!")
+
+	if strings.TrimSpace(healthCheckPort) == "" {
+		globals.Logger.Warning("Basic UDP health check will not be enabled. PN_PUYOPUYOTETRIS_HEALTH_CHECK_PORT environment variable not set")
+	} else if port, err := strconv.Atoi(healthCheckPort); err != nil {
+		globals.Logger.Errorf("PN_PUYOPUYOTETRIS_HEALTH_CHECK_PORT is not a valid port. Expected 0-65535, got %s", healthCheckPort)
+		os.Exit(0)
+	} else if port < 0 || port > 65535 {
+		globals.Logger.Errorf("PN_PUYOPUYOTETRIS_HEALTH_CHECK_PORT is not a valid port. Expected 0-65535, got %s", healthCheckPort)
+		os.Exit(0)
+	} else {
+		nex.EnableBasicUDPHealthCheck(port)
+	}
 }
