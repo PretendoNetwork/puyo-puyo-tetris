@@ -51,7 +51,6 @@ All configuration options are handled via environment variables
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_HOST`          | Host name for your account server gRPC service                                                  | Yes                                           |
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_PORT`          | Port for your account server gRPC service                                                       | Yes                                           |
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_API_KEY`       | API key for your account server gRPC service                                                    | No (Assumed to be an open gRPC API)           |
-| `PN_PUYOPUYOTETRIS_AES_KEY`                    | Account server token validation key                                                             | Yes                                           |
 | `PN_PUYOPUYOTETRIS_LOCAL_AUTH`                 | Use local file for NEX credentials rather than talking to account server (INSECURE)             | No                                            |
 | `PN_PUYOPUYOTETRIS_FRIENDS_GRPC_HOST`          | Host name for Friends gRPC service                                                              | Yes                                           |
 | `PN_PUYOPUYOTETRIS_FRIENDS_GRPC_PORT`          | Port for Friends gRPC service                                                                   | Yes                                           |

@@ -39,5 +39,4 @@ var S3Manager *common_globals.MinIOManager
 var S3Bucket string
 var S3KeyBase string
 
-var TokenAESKey []byte
 var LocalAuthMode bool
