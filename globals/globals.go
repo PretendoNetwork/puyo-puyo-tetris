@@ -2,6 +2,7 @@ package globals
 
 import (
 	"database/sql"
+
 	pbaccount "github.com/PretendoNetwork/grpc/go/account"
 	pbfriends "github.com/PretendoNetwork/grpc/go/friends"
 	"github.com/PretendoNetwork/nex-go/v2"
@@ -34,9 +35,8 @@ var GRPCFriendsClient pbfriends.FriendsClient
 var GRPCFriendsCommonMetadata metadata.MD
 
 var MinIOClient *minio.Client
-var S3Presigner *common_globals.MinIOPresigner
+var S3Manager *common_globals.MinIOManager
 var S3Bucket string
 var S3KeyBase string
 
-var TokenAESKey []byte
 var LocalAuthMode bool

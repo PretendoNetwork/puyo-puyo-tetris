@@ -38,21 +38,22 @@ func MatchmakeExtensionCloseParticipation(err error, packet nex.PacketInterface,
 
 	manager.Mutex.Lock()
 
-	session, _, nexError := database.GetMatchmakeSessionByID(manager, endpoint, uint32(gid))
+	//session, _, nexError := database.GetMatchmakeSessionByID(manager, endpoint, uint32(gid))
+	//if nexError != nil {
+	//	manager.Mutex.Unlock()
+	//	return nil, nexError
+	//}
+
+	// * PUYOPUYOTETRIS has everyone send CloseParticipation here, not just the owner of the room.
+	// * This seems to be how one can keep matchmaking if the owner leaves?
+	// * So, skip the permission check.
+	//if session.Gathering.OwnerPID.Equals(connection.PID()) {
+	nexError := database.UpdateParticipation(manager, uint32(gid), false)
 	if nexError != nil {
 		manager.Mutex.Unlock()
 		return nil, nexError
 	}
-
-	// * PUYOPUYOTETRIS has everyone send CloseParticipation here, not just the owner of the room.
-	// * So, if a non-owner asks, just lie and claim success without actually changing anything.
-	if session.Gathering.OwnerPID.Equals(connection.PID()) {
-		nexError = database.UpdateParticipation(manager, uint32(gid), false)
-		if nexError != nil {
-			manager.Mutex.Unlock()
-			return nil, nexError
-		}
-	}
+	//}
 
 	manager.Mutex.Unlock()
 
@@ -64,12 +65,51 @@ func MatchmakeExtensionCloseParticipation(err error, packet nex.PacketInterface,
 	return rmcResponse, nil
 }
 
+func MatchmakeExtensionOpenParticipation(err error, packet nex.PacketInterface, callID uint32, gid types.UInt32) (*nex.RMCMessage, *nex.Error) {
+	if err != nil {
+		commonglobals.Logger.Error(err.Error())
+		return nil, nex.NewError(nex.ResultCodes.Core.InvalidArgument, "change_error")
+	}
+
+	connection := packet.Sender().(*nex.PRUDPConnection)
+	manager := globals.MatchmakingManager
+	endpoint := connection.Endpoint().(*nex.PRUDPEndPoint)
+
+	manager.Mutex.Lock()
+
+	//session, _, nexError := database.GetMatchmakeSessionByID(manager, endpoint, uint32(gid))
+	//if nexError != nil {
+	//	manager.Mutex.Unlock()
+	//	return nil, nexError
+	//}
+
+	// * PUYOPUYOTETRIS has everyone send OpenParticipation here, not just the owner of the room.
+	// * This seems to be how one can keep matchmaking if the owner leaves?
+	// * So, skip the permission check.
+	//if !session.Gathering.OwnerPID.Equals(connection.PID()) {
+	//	manager.Mutex.Unlock()
+	//	return nil, nex.NewError(nex.ResultCodes.RendezVous.PermissionDenied, "change_error")
+	//}
+
+	nexError := database.UpdateParticipation(manager, uint32(gid), true)
+	if nexError != nil {
+		manager.Mutex.Unlock()
+		return nil, nexError
+	}
+
+	manager.Mutex.Unlock()
+
+	rmcResponse := nex.NewRMCSuccess(endpoint, nil)
+	rmcResponse.ProtocolID = matchmakeextension.ProtocolID
+	rmcResponse.MethodID = matchmakeextension.MethodOpenParticipation
+	rmcResponse.CallID = callID
+
+	return rmcResponse, nil
+}
+
 func CreateReportDBRecord(_ types.PID, _ types.UInt32, _ types.QBuffer) error {
 	return nil
 }
-
-// TO DO:
-// Persistent gatherings for clubs
 
 func registerCommonSecureServerProtocols() {
 	secureProtocol := secure.NewProtocol()
@@ -113,8 +153,9 @@ func registerCommonSecureServerProtocols() {
 	matchmakeExtensionProtocol := matchmakeextension.NewProtocol()
 	globals.SecureEndpoint.RegisterServiceProtocol(matchmakeExtensionProtocol)
 	commonMatchmakeExtensionProtocol := commonmatchmakeextension.NewCommonProtocol(matchmakeExtensionProtocol)
-	// * Handle custom CloseParticipation behaviour
+	// * Handle custom OpenParticipation/CloseParticipation behaviour
 	matchmakeExtensionProtocol.SetHandlerCloseParticipation(MatchmakeExtensionCloseParticipation)
+	matchmakeExtensionProtocol.SetHandlerOpenParticipation(MatchmakeExtensionOpenParticipation)
 	commonMatchmakeExtensionProtocol.SetManager(globals.MatchmakingManager)
 	commonMatchmakeExtensionProtocol.CleanupMatchmakeSessionSearchCriterias = func(searchCriterias types.List[matchmakingtypes.MatchmakeSessionSearchCriteria]) {
 		// lol ok

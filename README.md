@@ -51,14 +51,13 @@ All configuration options are handled via environment variables
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_HOST`          | Host name for your account server gRPC service                                                  | Yes                                           |
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_PORT`          | Port for your account server gRPC service                                                       | Yes                                           |
 | `PN_PUYOPUYOTETRIS_ACCOUNT_GRPC_API_KEY`       | API key for your account server gRPC service                                                    | No (Assumed to be an open gRPC API)           |
-| `PN_PUYOPUYOTETRIS_AES_KEY`                    | Account server token validation key                                                             | Yes                                           |
 | `PN_PUYOPUYOTETRIS_LOCAL_AUTH`                 | Use local file for NEX credentials rather than talking to account server (INSECURE)             | No                                            |
 | `PN_PUYOPUYOTETRIS_FRIENDS_GRPC_HOST`          | Host name for Friends gRPC service                                                              | Yes                                           |
 | `PN_PUYOPUYOTETRIS_FRIENDS_GRPC_PORT`          | Port for Friends gRPC service                                                                   | Yes                                           |
 | `PN_PUYOPUYOTETRIS_FRIENDS_GRPC_API_KEY`       | API key for Friends gRPC service                                                                | No (Assumed to be an open gRPC API)           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_ENDPOINT`         | URL for DataStore S3 storage                                                                    | Yes                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_ACCESS_KEY`       | Access key for S3                                                                               | Yes                                           |
-| `PN_PUYOPUYOTETRIS_CONFIG_S3_SECRET`           | Secret key for S3                                                                               | Yes                                           |
+| `PN_PUYOPUYOTETRIS_CONFIG_S3_ACCESS_SECRET`    | Secret key for S3                                                                               | Yes                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_BUCKET`           | Bucket for DataStore storage                                                                    | Yes                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_KEY_BASE`         | Base for Datastore keys                                                                         | YES                                           |
 | `PN_PUYOPUYOTETRIS_CONFIG_S3_INSECURE`         | Use HTTP for S3 endpoints                                                                       | No (Default off)                              |
