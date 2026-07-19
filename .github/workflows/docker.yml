@@ -13,7 +13,7 @@ jobs:
   build-publish-amd64:
     name: Build and Publish Docker Image (amd64)
     env:
-      SHOULD_PUSH_IMAGE: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev')) || github.event_name == 'workflow_dispatch' }}
+      SHOULD_PUSH_IMAGE: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -41,7 +41,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=edge,enable=${{ github.ref == 'refs/heads/dev' }}
             type=sha
 
@@ -59,7 +59,7 @@ jobs:
   build-publish-arm64:
     name: Build and Publish Docker Image (arm64)
     env:
-      SHOULD_PUSH_IMAGE: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev')) || github.event_name == 'workflow_dispatch' }}
+      SHOULD_PUSH_IMAGE: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04-arm
 
     permissions:
@@ -87,7 +87,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest-arm,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=latest-arm,enable=${{ github.ref == 'refs/heads/main' }}
             type=raw,value=edge-arm,enable=${{ github.ref == 'refs/heads/dev' }}
             type=sha,suffix=-arm
 
