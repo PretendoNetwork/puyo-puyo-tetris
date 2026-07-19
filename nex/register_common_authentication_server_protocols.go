@@ -38,7 +38,9 @@ func registerCommonAuthenticationServerProtocols() {
 			return nil
 		}
 	} else {
-		// TODO: Re-enable once Common DataStore is rebased up to latest
-		// commonTicketGrantingProtocol.SetPretendoValidation(globals.TokenAESKey)
+		// HACK: replace with ConfigurePNValidation once Common Datastore is rebased up to latest
+		commonTicketGrantingProtocol.ValidateLoginData = func(pid types.PID, loginData types.DataHolder) *nex.Error {
+			return nil
+		}
 	}
 }
