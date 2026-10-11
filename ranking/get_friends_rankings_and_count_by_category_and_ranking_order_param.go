@@ -6,6 +6,7 @@ import (
 	"github.com/PretendoNetwork/nex-go/v2"
 	"github.com/PretendoNetwork/nex-go/v2/types"
 	rankingtypes "github.com/PretendoNetwork/nex-protocols-go/v2/ranking/types"
+	"github.com/PretendoNetwork/pq-extended"
 	"github.com/PretendoNetwork/puyo-puyo-tetris/globals"
 )
 
@@ -22,7 +23,7 @@ func GetFriendsRankingsAndCountByCategoryAndRankingOrderParam(pid types.PID, cat
 		rankingOrderParam.Offset,
 		rankingOrderParam.Length,
 		pid,
-		friends,
+		pqextended.Array(friends),
 	)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, 0, nil
